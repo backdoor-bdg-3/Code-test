@@ -126,6 +126,22 @@ If the app crashes repeatedly, it will launch in Safe Mode with limited function
 - Ensure that you trust the developer certificate in iOS Settings
 - Verify that the app is properly signed
 
+## Debug Build Issue Fix
+
+When building the project in Debug mode, you might encounter the following error:
+
+```
+xcodebuild: error: Unknown build action 'DEBUGGER_ENABLED'.
+```
+
+This occurs because `DEBUGGER_ENABLED` is being passed as a build action rather than as a compilation condition. To fix this issue, use the provided `fix_build.sh` script:
+
+```bash
+./fix_build.sh
+```
+
+This script properly formats the build flags as key-value pairs, ensuring that `SWIFT_ACTIVE_COMPILATION_CONDITIONS="DEBUG DEBUGGER_ENABLED"` is used instead of passing `DEBUGGER_ENABLED` as a separate build action.
+
 ## License
 
 Backdoor App Signer is protected under the Proprietary Software License Version 1.0.
