@@ -374,9 +374,3 @@ extension AIViewController: UITableViewDelegate {
 
 // MARK: - View Controller Refreshable
 
-extension AIViewController: ViewControllerRefreshable {
-    func refreshContent() {
-        // Reload data when tab is selected
-        loadRecentSessions()
-    }
-}
