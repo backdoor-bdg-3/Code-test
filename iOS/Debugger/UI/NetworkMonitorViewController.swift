@@ -1,6 +1,7 @@
 import UIKit
 
-#if DEBUG
+// Update conditional compilation to support TBR debug and release schemes
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
 
     /// View controller for the network tab in the debugger
     class NetworkMonitorViewController: UIViewController {
@@ -768,4 +769,4 @@ import UIKit
         }
     }
 
-#endif // DEBUG
+#endif // DEBUG || TBR_DEBUG || TBR_RELEASE

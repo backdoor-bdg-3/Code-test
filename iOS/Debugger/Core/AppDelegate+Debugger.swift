@@ -1,6 +1,7 @@
 import UIKit
 
-#if DEBUG
+// Update conditional compilation to support TBR debug and release schemes
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
 
     /// Extension to AppDelegate for initializing the debugger
     extension AppDelegate {
@@ -14,4 +15,4 @@ import UIKit
         }
     }
 
-#endif // DEBUG
+#endif // DEBUG || TBR_DEBUG || TBR_RELEASE

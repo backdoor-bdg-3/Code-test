@@ -1,6 +1,7 @@
 import UIKit
 
-#if DEBUG
+// Update conditional compilation to support TBR debug and release schemes
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
 
     /// View controller for the console tab in the debugger
     class ConsoleViewController: UIViewController {
@@ -327,4 +328,4 @@ import UIKit
         }
     }
 
-#endif // DEBUG
+#endif // DEBUG || TBR_DEBUG || TBR_RELEASE

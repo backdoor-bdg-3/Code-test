@@ -1,6 +1,7 @@
 import UIKit
 
-#if DEBUG
+// Update conditional compilation to support TBR debug and release schemes
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
 
     /// Protocol for debugger view controller delegate
     protocol DebuggerViewControllerDelegate: AnyObject {
@@ -288,4 +289,4 @@ import UIKit
         }
     }
 
-#endif // DEBUG
+#endif // DEBUG || TBR_DEBUG || TBR_RELEASE

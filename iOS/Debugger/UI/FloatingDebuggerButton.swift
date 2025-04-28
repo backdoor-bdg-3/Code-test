@@ -1,6 +1,8 @@
 import UIKit
 
-#if DEBUG
+// Replace DEBUG-only compilation with a more flexible approach
+// that works with both TBR debug and release schemes
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
 
     /// Floating button that provides quick access to the debugger
     class FloatingDebuggerButton: UIButton {
@@ -180,4 +182,4 @@ import UIKit
         static let hideDebuggerButton = Notification.Name("hideDebuggerButton")
     }
 
-#endif // DEBUG
+#endif // DEBUG || TBR_DEBUG || TBR_RELEASE

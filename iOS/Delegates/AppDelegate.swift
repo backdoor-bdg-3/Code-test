@@ -8,7 +8,7 @@ import SystemConfiguration
 import UIKit
 import UIOnboarding
 
-#if DEBUG
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
     import Debugger
 #endif
 
@@ -63,8 +63,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIOnboardingViewControlle
         // Log device information
         logDeviceInfo()
 
-        #if DEBUG
-            // Initialize the debugger in debug builds only
+        // Update debugger initialization to support TBR debug and release schemes
+        #if DEBUG || TBR_DEBUG || TBR_RELEASE
+            // Initialize the debugger in debug and TBR builds
             initializeDebugger()
         #endif
 

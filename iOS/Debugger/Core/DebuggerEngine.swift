@@ -2,7 +2,8 @@ import Foundation
 import OSLog
 import UIKit
 
-#if DEBUG
+// Update conditional compilation to support TBR debug and release schemes
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
 
     /// Core engine for the runtime debugger
     /// Provides LLDB-like functionality within the app
@@ -721,4 +722,4 @@ import UIKit
         static let debuggerStepCompleted = Notification.Name("debuggerStepCompleted")
     }
 
-#endif // DEBUG
+#endif // DEBUG || TBR_DEBUG || TBR_RELEASE

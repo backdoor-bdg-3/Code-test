@@ -1,6 +1,7 @@
 import UIKit
 
-#if DEBUG
+// Update conditional compilation to support TBR debug and release schemes
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
 
     /// View controller for the variables tab in the debugger
     class VariablesViewController: UIViewController {
@@ -370,4 +371,4 @@ import UIKit
         }
     }
 
-#endif // DEBUG
+#endif // DEBUG || TBR_DEBUG || TBR_RELEASE

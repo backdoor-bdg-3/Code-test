@@ -1,6 +1,7 @@
 import UIKit
 
-#if DEBUG
+// Update conditional compilation to support TBR debug and release schemes
+#if DEBUG || TBR_DEBUG || TBR_RELEASE
 
     /// View controller for the performance tab in the debugger
     class PerformanceViewController: UIViewController {
@@ -378,4 +379,4 @@ import UIKit
         var energyImpact: Double = 3.0
     }
 
-#endif // DEBUG
+#endif // DEBUG || TBR_DEBUG || TBR_RELEASE
