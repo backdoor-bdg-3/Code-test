@@ -4,6 +4,9 @@ import UIKit
 protocol DebuggerViewControllerDelegate: AnyObject {
     /// Called when the debugger view controller requests dismissal
     func debuggerViewControllerDidRequestDismissal(_ viewController: DebuggerViewController)
+    
+    /// Called when the debugger view controller requests a FLEX tool
+    func debuggerViewControllerDidRequestFLEXTool(_ viewController: DebuggerViewController, tool: FLEXDebuggerTool)
 }
 
 /// Main view controller for the debugger UI
@@ -65,6 +68,15 @@ class DebuggerViewController: UIViewController {
             action: #selector(closeButtonTapped)
         )
         navigationItem.rightBarButtonItem = closeButton
+        
+        // Add FLEX button
+        let flexButton = UIBarButtonItem(
+            title: "FLEX",
+            style: .plain,
+            target: self,
+            action: #selector(flexButtonTapped)
+        )
+        navigationItem.leftBarButtonItem = flexButton
 
         // Add execution control buttons
         let pauseButton = UIBarButtonItem(
@@ -134,6 +146,7 @@ class DebuggerViewController: UIViewController {
         let memoryVC = createMemoryViewController()
         let networkVC = createNetworkViewController()
         let performanceVC = createPerformanceViewController()
+        let flexToolsVC = createFLEXToolsViewController()
 
         // Set tab bar items
         consoleVC.tabBarItem = UITabBarItem(title: "Console", image: UIImage(systemName: "terminal"), tag: 0)
@@ -146,6 +159,7 @@ class DebuggerViewController: UIViewController {
         memoryVC.tabBarItem = UITabBarItem(title: "Memory", image: UIImage(systemName: "memorychip"), tag: 3)
         networkVC.tabBarItem = UITabBarItem(title: "Network", image: UIImage(systemName: "network"), tag: 4)
         performanceVC.tabBarItem = UITabBarItem(title: "Performance", image: UIImage(systemName: "gauge"), tag: 5)
+        flexToolsVC.tabBarItem = UITabBarItem(title: "FLEX Tools", image: UIImage(systemName: "wrench.and.screwdriver"), tag: 6)
 
         // Set view controllers
         viewControllers = [
@@ -155,6 +169,7 @@ class DebuggerViewController: UIViewController {
             UINavigationController(rootViewController: memoryVC),
             UINavigationController(rootViewController: networkVC),
             UINavigationController(rootViewController: performanceVC),
+            UINavigationController(rootViewController: flexToolsVC),
         ]
 
         debugTabBarController.viewControllers = viewControllers
@@ -186,11 +201,22 @@ class DebuggerViewController: UIViewController {
     private func createPerformanceViewController() -> UIViewController {
         return PerformanceViewController()
     }
+    
+    private func createFLEXToolsViewController() -> UIViewController {
+        let flexToolsVC = FLEXToolsViewController()
+        flexToolsVC.delegate = self
+        return flexToolsVC
+    }
 
     // MARK: - Actions
 
     @objc private func closeButtonTapped() {
         delegate?.debuggerViewControllerDidRequestDismissal(self)
+    }
+    
+    @objc private func flexButtonTapped() {
+        // Show FLEX explorer
+        delegate?.debuggerViewControllerDidRequestFLEXTool(self, tool: .viewHierarchy)
     }
 
     @objc private func pauseButtonTapped() {
@@ -283,5 +309,13 @@ extension DebuggerViewController: DebuggerEngineDelegate {
             stepIntoButton.isEnabled = false
             stepOutButton.isEnabled = false
         }
+    }
+}
+
+// MARK: - FLEXToolsViewControllerDelegate
+
+extension DebuggerViewController: FLEXToolsViewControllerDelegate {
+    func flexToolsViewController(_ viewController: FLEXToolsViewController, didSelectTool tool: FLEXDebuggerTool) {
+        delegate?.debuggerViewControllerDidRequestFLEXTool(self, tool: tool)
     }
 }

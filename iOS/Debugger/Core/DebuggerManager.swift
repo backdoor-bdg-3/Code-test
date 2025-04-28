@@ -18,6 +18,9 @@ public final class DebuggerManager {
 
     /// The debugger engine
     private let debuggerEngine = DebuggerEngine.shared
+    
+    /// The FLEX debugger adapter
+    private let flexAdapter = FLEXDebuggerAdapter.shared
 
     /// Current debugger view controller
     private weak var debuggerViewController: DebuggerViewController?
@@ -53,6 +56,12 @@ public final class DebuggerManager {
     /// This should be called from the AppDelegate
     public func initialize() {
         logger.log(message: "Initializing debugger", type: .info)
+
+        // Initialize FLEX adapter
+        flexAdapter.initialize()
+        
+        // Enable network monitoring by default
+        flexAdapter.enableNetworkMonitoring()
 
         // Show the floating button
         DispatchQueue.main.async { [weak self] in
@@ -149,6 +158,29 @@ public final class DebuggerManager {
             self?.logger.log(message: "Floating debugger button removed", type: .info)
         }
     }
+    
+    /// Show the FLEX explorer directly
+    public func showFLEXExplorer() {
+        flexAdapter.showExplorer()
+    }
+    
+    /// Hide the FLEX explorer
+    public func hideFLEXExplorer() {
+        flexAdapter.hideExplorer()
+    }
+    
+    /// Toggle the FLEX explorer visibility
+    public func toggleFLEXExplorer() {
+        flexAdapter.toggleExplorer()
+    }
+    
+    /// Present a specific FLEX debugging tool
+    /// - Parameters:
+    ///   - tool: The tool to present
+    ///   - completion: Completion handler called when the tool is presented
+    public func presentFLEXTool(_ tool: FLEXDebuggerTool, completion: (() -> Void)? = nil) {
+        flexAdapter.presentTool(tool, completion: completion)
+    }
 
     // MARK: - Private Methods
 
@@ -241,12 +273,25 @@ extension DebuggerManager: DebuggerViewControllerDelegate {
     func debuggerViewControllerDidRequestDismissal(_: DebuggerViewController) {
         hideDebugger()
     }
+    
+    func debuggerViewControllerDidRequestFLEXTool(_ viewController: DebuggerViewController, tool: FLEXDebuggerTool) {
+        presentFLEXTool(tool) {
+            // Optional: Handle completion if needed
+        }
+    }
 }
 
 // MARK: - UIApplication Extension
 
 extension UIApplication {
-    private func findTopViewController(_ controller: UIViewController) -> UIViewController {
+    func topMostViewController() -> UIViewController? {
+        guard let keyWindow = keyWindow else { return nil }
+        return findTopViewController(keyWindow.rootViewController)
+    }
+    
+    private func findTopViewController(_ controller: UIViewController?) -> UIViewController? {
+        guard let controller = controller else { return nil }
+        
         if let presentedController = controller.presentedViewController {
             return findTopViewController(presentedController)
         }
@@ -273,7 +318,7 @@ extension UIApplication {
         if #available(iOS 13.0, *) {
             return UIApplication.shared.connectedScenes
                 .filter { $0.activationState == .foregroundActive }
-                .first(where: { $0 is UIWindowScene })
+                .first(where: { $0 is UIWindowScene })?
                 .flatMap { $0 as? UIWindowScene }?.windows
                 .first(where: { $0.isKeyWindow })
         } else {
